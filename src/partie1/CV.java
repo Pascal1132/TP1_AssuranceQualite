@@ -1,3 +1,4 @@
+package partie1;
 
 public class CV {
     public String nom = "";
