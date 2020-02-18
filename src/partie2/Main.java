@@ -16,6 +16,7 @@ public class Main {
 			System.out.println(string);
 		}
 		
+		
 	}
 	
 	public static String[][] separerPartiesContenu(ArrayList<String> contenu){

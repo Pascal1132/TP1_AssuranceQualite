@@ -11,8 +11,10 @@ public class OutilsFichier {
 		System.out.println("Lecture du fichier");
 		try {
 		      File myObj = new File(fichier);
-		      Scanner myReader = new Scanner(myObj);
+		      
+		      Scanner myReader = new Scanner(myObj, "UTF-8");
 		      while (myReader.hasNextLine()) {
+		    	  
 		        String data = myReader.nextLine();
 		        contenu.add(data);
 		      }
