@@ -24,7 +24,16 @@ public class Main {
 		
 	}
 	
-	
+	public static Client[] creerClient(String[] tabClientsString) {
+		Client[] tabClients = new Client[tabClientsString.length];
+		for (int i = 0; i < tabClients.length; i++) {
+			tabClients[i] = new Client(tabClientsString[i]);
+		}
+		
+		return tabClients;
+		
+
+	}
 
 }
 
