@@ -1,0 +1,6 @@
+Normes de programmation
+ - Noms des classes débutent par une majuscule
+ - Noms des variables débutent par une minuscule et on des majuscules au début des autres mots
+ - Noms des constantes contiennent que des majuscules et on des barres de soulignement pour différentier les mots
+ - Noms des packages débutent par une minuscule
+ - 
