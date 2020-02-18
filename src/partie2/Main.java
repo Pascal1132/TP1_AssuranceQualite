@@ -1,43 +1,27 @@
 package partie2;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
 	private static ArrayList<String> contenu;
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		//Test lire fichier style.txt
-		contenu = OutilsFichier.Lire("style.txt");
+		contenu = OutilsFichier.Lire("valeurs.txt");
 		
-		//String[][] test = separerPartiesContenu(contenu);
-		
-		
-		for (String string : contenu) {
-			System.out.println(string);
-		}
-		
+		List<List<String>> contenuSepare = separerPartiesContenu(contenu);
 		
 	}
 	
 	
-	public static String[][] separerPartiesContenu(ArrayList<String> contenu){
-		String[][] contenuSeprare = null;
+	public static List<List<String>> separerPartiesContenu(ArrayList<String> contenu){
+		List<List<String>> contenuSeprare = new ArrayList<List<String>>(); 
 		
-		//contenu.subList(fromIndex, toIndex)
-		
-		for(int i = 0; i < contenu.size(); i++) {
-			int pos = 0;
-			if (i > contenu.indexOf("Clients :") && i < contenu.indexOf("Plats :")) {
-				contenuSeprare[0][pos] = contenu.get(i);
-			} else if (i > contenu.indexOf("Plats :") && i < contenu.indexOf("Commandes :")) {
-				contenuSeprare[0][pos] = contenu.get(i);
-			} else if (i > contenu.indexOf("Commandes :") && i < contenu.indexOf("Fin")) {
-				contenuSeprare[0][pos] = contenu.get(i);
-			}
-			
-		} 
+		contenuSeprare.add(contenu.subList(contenu.lastIndexOf("Clients :") + 1, contenu.lastIndexOf("Plats :")));
+		contenuSeprare.add(contenu.subList(contenu.lastIndexOf("Plats :") + 1, contenu.lastIndexOf("Commandes :")));
+		contenuSeprare.add(contenu.subList(contenu.lastIndexOf("Commandes :") + 1, contenu.lastIndexOf("Fin")));
 		
 		return contenuSeprare;
 		
