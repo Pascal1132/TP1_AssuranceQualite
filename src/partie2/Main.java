@@ -11,19 +11,21 @@ public class Main {
 		//Test lire fichier style.txt
 		contenu = OutilsFichier.Lire("style.txt");
 		
-		String[][] test = separerPartiesContenu(contenu);
+		//String[][] test = separerPartiesContenu(contenu);
 		
 		
-		//Tests
-		for (String string : test[1]) {
+		for (String string : contenu) {
 			System.out.println(string);
 		}
 		
 		
 	}
 	
+	
 	public static String[][] separerPartiesContenu(ArrayList<String> contenu){
 		String[][] contenuSeprare = null;
+		
+		//contenu.subList(fromIndex, toIndex)
 		
 		for(int i = 0; i < contenu.size(); i++) {
 			int pos = 0;
@@ -50,7 +52,6 @@ public class Main {
 		
 		return tabClients;
 		
-
 	}
 
 
