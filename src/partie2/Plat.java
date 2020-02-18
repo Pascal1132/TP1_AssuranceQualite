@@ -24,4 +24,5 @@ public class Plat {
 	public void setPrixPlat( int prix ) {
 		this.prixPlat = prix;
 	}
+	//test
 }
