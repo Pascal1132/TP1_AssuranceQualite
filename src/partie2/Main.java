@@ -15,8 +15,16 @@ public class Main {
 		for (String string : contenu) {
 			System.out.println(string);
 		}
+		
+	}
+	
+	public static String[][] separerPartiesContenu(ArrayList<String> contenu){
+		
+		return null;
+		
 	}
 	
 	
 
 }
+
