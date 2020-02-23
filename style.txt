@@ -3,4 +3,4 @@ Normes de programmation
  - Noms des variables débutent par une minuscule et on des majuscules au début des autres mots
  - Noms des constantes contiennent que des majuscules et on des barres de soulignement pour différentier les mots
  - Noms des packages débutent par une minuscule
- - 
+ - Les commentaire débutent par un espace et une majuscule.Par exemple, // Commentaire 
