@@ -9,6 +9,10 @@ public class Plat {
 		this.prixPlat = d;
 	}
 	
+	public Plat(String nomPlat) {
+		this.nomPlat = nomPlat;
+	}
+
 	public String getNomPlat() {
 		return this.nomPlat;
 	}
