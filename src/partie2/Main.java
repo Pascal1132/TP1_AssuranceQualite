@@ -1,5 +1,8 @@
 package partie2;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,6 +12,10 @@ import java.util.ListIterator;
 import java.util.Locale;
 
 public class Main {
+	private static final String FICHIER_ENTREE = "valeurs.txt";
+
+	private static final String FICHIER_SORTIE = "Facture.txt";
+
 	public final static String TITRE_FACTURE = "Bienvenue chez Barette !\nFactures:";
 
 	private static ArrayList<String> contenu;
@@ -16,42 +23,71 @@ public class Main {
 	public static ArrayList<Plat> listePlats;
 	public static ArrayList<Commande> listeCommandes;
 
+	private static int indiceInfo = 0;
+
 	public static void main(String[] args) {
 		// Test lire fichier style.txt
-		contenu = OutilsFichier.lire("valeurs.txt");
+		AfficherInfos("Lecture du fichier "+FICHIER_ENTREE+ ".");
+		contenu = OutilsFichier.lire(FICHIER_ENTREE);
 		
-		// Séparer les parties du contenu du fichier
-		ArrayList<List<String>> contenuSepare = separerPartiesContenu(contenu);
-		
-		// Récupérer la partie du fichier contenant l'erreur (Si il y en a une)
-		int erreur = recupererPartieErreur(contenuSepare);
-		
-		if(erreur==-1) {
-			// Aucune erreur
+		if(contenu.size()!=0) {
+			// Séparer les parties du contenu du fichier
+			AfficherInfos("Séparation des parties.");
+			ArrayList<List<String>> contenuSepare = separerPartiesContenu(contenu);
 			
-			// Créer les listes des objets
-			creerObjets(contenuSepare);
 			
-			// Creer la facture
-			ArrayList<String> facture = calculerFacture();
+			// Récupérer la partie du fichier contenant l'erreur (Si il y en a une)
+			boolean erreur = recupererPartieErreur(contenuSepare);
 			
-			//Afficher la facture
-			ecrireEtAfficherFactureFichier(facture);
-			
-		}else {
-			// Erreur dans le format du fichier
-			System.out.println("Le fichier ne respecte pas le format" +
-					" demandé !\nErreur arrivée dans la partie de la liste numéro : " + erreur );
+			if(!erreur) {
+				// Aucune erreur
+				
+				// Créer les listes des objets
+				AfficherInfos("Création des objets");
+				creerObjets(contenuSepare);
+				
+				
+				// Creer la facture
+				AfficherInfos("Calcul de la facture");
+				ArrayList<String> facture = calculerFacture();
+				
+				
+				//Afficher la facture
+				AfficherInfos("Affichage de la facture inscrite dans le fichier "+FICHIER_SORTIE);
+				ecrireEtAfficherFactureFichier(facture);
+				
+				
+			}else {
+				// Erreur dans le format du fichier
+				System.err.println("Le fichier ne respecte pas le format" +
+						" demandé !");
+			}
 		}
 		
+		
+	}
+	
+	private static void AfficherInfos(String chaine) {
+		System.out.println("["+indiceInfo+"] "+chaine);
+		indiceInfo++;
 	}
 
 
 	private static void ecrireEtAfficherFactureFichier(ArrayList<String> facture) {
 		
-		System.out.println(TITRE_FACTURE);
-		for (String string : facture) {
-			System.out.println(string);
+		String factureEnChaine = TITRE_FACTURE;
+		
+		for (String ligne : facture) {
+			factureEnChaine += "\n"+ ligne;
+		}
+		
+		
+		OutilsFichier.ecrire(FICHIER_SORTIE, factureEnChaine);
+		//Ouvrir le fichier Facture.txt 
+		try {
+			Desktop.getDesktop().open(new File(FICHIER_SORTIE));
+		} catch (IOException e) {
+			System.err.println("Erreur dans l'ouverture du fichier "+FICHIER_SORTIE);
 		}
 	}
 	
@@ -89,11 +125,17 @@ public class Main {
 		for (Commande commande : listeCommandes) {
 			if(commande.getNomClient().equals(client.getNom())) {
 				
-				int indicePlat = recupererIndicePlat(commande);
 				
 				
-				Plat plat = listePlats.get(indicePlat);
-				total+= plat.getPrixPlat()*commande.getQuantite();
+				try {
+					int indicePlat = recupererIndicePlat(commande);
+					Plat plat = listePlats.get(indicePlat);
+					total+= plat.getPrixPlat()*commande.getQuantite();
+				} catch (Exception e) {
+					System.err.println("Le plat "+commande.getNomPlat()+" n'existe pas.");
+					
+				}
+				
 				
 			}
 		}
@@ -121,7 +163,7 @@ public class Main {
 			contenuSeprare.add(contenu.subList(contenu.lastIndexOf("Plats :") + 1, contenu.lastIndexOf("Commandes :")));
 			contenuSeprare.add(contenu.subList(contenu.lastIndexOf("Commandes :") + 1, contenu.lastIndexOf("Fin")));
 		} catch (Exception e) {
-			System.out.println("\nLe fichier ne respecte pas le format demandé !");
+			System.err.println("\nLe fichier ne respecte pas le format demandé !");
 		}
 		
 	
@@ -145,7 +187,12 @@ public class Main {
 		ArrayList<Plat> tabPlats = new ArrayList<Plat>();
 		for (int i = 0; i < list.size(); i++) {
 			String[] chaineSeparee = list.get(i).split(" ");
-			tabPlats.add(new Plat(chaineSeparee[0], Double.parseDouble(chaineSeparee[1])));
+			
+			try {
+				tabPlats.add(new Plat(chaineSeparee[0], Double.parseDouble(chaineSeparee[1])));
+			} catch (NumberFormatException e) {
+				System.err.println("Impossible de transformer la chaine \""+ chaineSeparee[1] + "\" en double.");
+			}
 			
 		}
 		return tabPlats;
@@ -157,7 +204,12 @@ public class Main {
 		ArrayList<Commande> tabCommandes = new ArrayList<Commande>();
 		for (int i = 0; i < list.size(); i++) {
 			String[] chaineSeparee = list.get(i).split(" ");
-			tabCommandes.add( new Commande(chaineSeparee[0], chaineSeparee[1], Integer.parseInt(chaineSeparee[2])));
+			try {
+				tabCommandes.add( new Commande(chaineSeparee[0], chaineSeparee[1], Integer.parseInt(chaineSeparee[2])));
+			} catch (NumberFormatException e) {
+				System.err.println("Impossible de transformer la chaine \""+ chaineSeparee[2] + "\" en entier.");
+			}
+			
 		}
 		return tabCommandes;
 		
@@ -173,24 +225,20 @@ public class Main {
 	 * 
 	 * 
 	 */
-	public static int recupererPartieErreur(ArrayList<List<String>> contenuSepare) {
-		int ligneErreur=-1;
+	public static boolean recupererPartieErreur(ArrayList<List<String>> contenuSepare) {
+		boolean estErreur=false;
 		for (int i = 0; i < contenuSepare.size(); i++) {
 			for (int j = 0; j < contenuSepare.get(i).size(); j++) {
 				int nbEspace = compterEspace(contenuSepare.get(i).get(j));
-				
-				if(nbEspace != i+1)ligneErreur=i+1;
-				
-				/*
-				 * Pour test, effectuer ça:
-				 * System.out.println(i+" -> " + "("+contenuSepare.get(i).get(j)+") -> " +nbEspace);
-				 * 
-				 * */
+				if(nbEspace != i+1) {
+					estErreur=true;
+					break;
+				}
 			}
 			
 		}
 		
-		return ligneErreur;
+		return estErreur;
 		
 	}
 	public static int compterEspace(String chaine) {
