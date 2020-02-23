@@ -26,11 +26,11 @@ public class Commande {
 		this.nomPlat = nom;
 	}
 	
-	public int getPrixPlat() {
+	public int getQuantite() {
 		return this.quantite;
 	}
 	
-	public void setPrixPlat( int quantite ) {
+	public void setQuantite( int quantite ) {
 		this.quantite = quantite;
 	}
 }
