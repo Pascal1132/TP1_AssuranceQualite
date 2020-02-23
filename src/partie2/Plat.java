@@ -2,11 +2,11 @@ package partie2;
 
 public class Plat {
 	public String nomPlat = "";
-	public int prixPlat = 0;
+	public double prixPlat = 0;
 	
-	public Plat(String nomPlat, int prixPlat) {
+	public Plat(String nomPlat, double d) {
 		this.nomPlat = nomPlat;
-		this.prixPlat = prixPlat;
+		this.prixPlat = d;
 	}
 	
 	public String getNomPlat() {
@@ -17,12 +17,12 @@ public class Plat {
 		this.nomPlat = nom;
 	}
 	
-	public int getPrixPlat() {
+	public double getPrixPlat() {
 		return this.prixPlat;
 	}
 	
-	public void setPrixPlat( int prix ) {
+	public void setPrixPlat( double prix ) {
 		this.prixPlat = prix;
 	}
-	//test
+	
 }
