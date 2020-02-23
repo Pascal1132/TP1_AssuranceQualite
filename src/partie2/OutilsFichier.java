@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class OutilsFichier {
 	public static ArrayList<String> Lire(String fichier) {
 		ArrayList<String> contenu = new ArrayList<String>();
-		System.out.println("Lecture du fichier");
+		
 		try {
 		      File myObj = new File(fichier);
 		      
@@ -20,8 +20,8 @@ public class OutilsFichier {
 		      }
 		      myReader.close();
 		    } catch (FileNotFoundException e) {
-		      System.out.println("An error occurred.");
-		      e.printStackTrace();
+		      System.out.println("Erreur de lecture du fichier. Impossible de trouver le fichier nommé \""+ fichier +"\"");
+		      
 		    }
 		return contenu;
 	}
