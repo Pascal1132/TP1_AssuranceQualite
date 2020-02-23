@@ -3,12 +3,12 @@ package partie2;
 public class Commande {
 	public String nomClient = "";
 	public String nomPlat = "";
-	public int prixPlat = 0;
+	public int quantite = 0;
 	
-	public Commande(String nomClient, String nomPlat, int prixPlat) {
+	public Commande(String nomClient, String nomPlat, int quantite) {
 		this.nomClient = nomClient;
 		this.nomPlat = nomPlat;
-		this.prixPlat = prixPlat;
+		this.quantite = quantite;
 	}
 	public String getNomClient() {
 		return this.nomClient;
@@ -27,10 +27,10 @@ public class Commande {
 	}
 	
 	public int getPrixPlat() {
-		return this.prixPlat;
+		return this.quantite;
 	}
 	
-	public void setPrixPlat( int prix ) {
-		this.prixPlat = prix;
+	public void setPrixPlat( int quantite ) {
+		this.quantite = quantite;
 	}
 }
