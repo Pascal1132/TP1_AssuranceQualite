@@ -19,7 +19,7 @@ public class Main {
 
 	private static final double TAUX_TVQ = 0.09975;
 
-	private static final String FICHIER_ENTREE = "valeurs_erronees.txt";
+	private static final String FICHIER_ENTREE = "valeurs.txt";
 
 	public static String fichierSortie = "Facture.txt";
 
@@ -113,6 +113,7 @@ public class Main {
 		}
 
 		OutilsFichier.ecrire(fichierSortie, factureEnChaine);
+		System.out.println("------------------------\n"+factureEnChaine);
 	}
 
 	public static void creerObjets(ArrayList<List<String>> contenuSepare) {
