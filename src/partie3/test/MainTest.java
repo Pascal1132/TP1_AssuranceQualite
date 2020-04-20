@@ -19,9 +19,12 @@ public class MainTest {
 	@Test
 	public void testNomClientNonExistant() {
 		
+		Main.erreurs=new ArrayList<ErreurFichier>();
 		ArrayList<String> contenu = new ArrayList<String>(Arrays.asList("Clients :", "Laurie", "Plats :", "Poutine 10.5","Commandes :","Roger Poutine 1", "Fin"));
 		ArrayList<List<String>> contenuSepare = Main.separerPartiesContenu(contenu);
+		Main.creerObjets(contenuSepare);
 		Main.detecterErreursCommandes(contenuSepare);
+		
 		
 		assertEquals("Roger", Main.erreurs.get(0).getMotErrone());
 		assertEquals(5, Main.erreurs.get(0).getLigne());
@@ -31,9 +34,12 @@ public class MainTest {
 	@Test
 	public void testPlatNonExistant() {
 		
-		ArrayList<String> contenu = new ArrayList<String>(Arrays.asList("Clients :", "Laurie", "Plats :", "Poutine 10.5","Commandes :","Roger HotDog 1", "Fin"));
+		Main.erreurs=new ArrayList<ErreurFichier>();
+		ArrayList<String> contenu = new ArrayList<String>(Arrays.asList("Clients :", "Laurie", "Plats :", "Poutine 10.5","Commandes :","Laurie HotDog 1", "Fin"));
 		ArrayList<List<String>> contenuSepare = Main.separerPartiesContenu(contenu);
+		Main.creerObjets(contenuSepare);
 		Main.detecterErreursCommandes(contenuSepare);
+		Main.creationFacture(contenuSepare);
 		
 		
 		assertEquals("HotDog", Main.erreurs.get(0).getMotErrone());
@@ -43,8 +49,10 @@ public class MainTest {
 	@Test
 	public void testQuantitePlatNegative() {
 		
-		ArrayList<String> contenu = new ArrayList<String>(Arrays.asList("Clients :", "Laurie", "Plats :", "Poutine 10.5","Commandes :","Roger Poutine -5", "Fin"));
+		Main.erreurs=new ArrayList<ErreurFichier>();
+		ArrayList<String> contenu = new ArrayList<String>(Arrays.asList("Clients :", "Laurie", "Plats :", "Poutine 10.5","Commandes :","Laurie Poutine -5", "Fin"));
 		ArrayList<List<String>> contenuSepare = Main.separerPartiesContenu(contenu);
+		Main.creerObjets(contenuSepare);
 		Main.detecterErreursCommandes(contenuSepare);
 	
 		assertEquals("-5", Main.erreurs.get(0).getMotErrone());
@@ -54,10 +62,12 @@ public class MainTest {
 	@Test
 	public void testQuantitePlatDecimal() {
 		
-		ArrayList<String> contenu = new ArrayList<String>(Arrays.asList("Clients :", "Laurie", "Plats :", "Poutine 10.5","Commandes :","Roger Poutine 2.25", "Fin"));
+		Main.erreurs=new ArrayList<ErreurFichier>();
+		ArrayList<String> contenu = new ArrayList<String>(Arrays.asList("Clients :", "Laurie", "Plats :", "Poutine 10.5","Commandes :","Laurie Poutine 2.25", "Fin"));
 		ArrayList<List<String>> contenuSepare = Main.separerPartiesContenu(contenu);
+		Main.creerObjets(contenuSepare);
 		Main.detecterErreursCommandes(contenuSepare);
-		assertEquals("10.5", Main.erreurs.get(0).getMotErrone());
+		assertEquals("2.25", Main.erreurs.get(0).getMotErrone());
 		assertEquals(5, Main.erreurs.get(0).getLigne());
 		assertEquals(TypeErreurs.QUANTITE_PLAT_DECIMAL, Main.erreurs.get(0).getType());
 		
@@ -65,8 +75,10 @@ public class MainTest {
 	@Test
 	public void testPrixNegatif() {
 		
-		ArrayList<String> contenu = new ArrayList<String>(Arrays.asList("Clients :", "Laurie", "Plats :", "Poutine -10","Commandes :","Roger Poutine 2", "Fin"));
+		Main.erreurs=new ArrayList<ErreurFichier>();
+		ArrayList<String> contenu = new ArrayList<String>(Arrays.asList("Clients :", "Laurie", "Plats :", "Poutine -10","Commandes :","Laurie Poutine 2", "Fin"));
 		ArrayList<List<String>> contenuSepare = Main.separerPartiesContenu(contenu);
+		Main.creerObjets(contenuSepare);
 		Main.detecterErreursCommandes(contenuSepare);
 		assertEquals("-10", Main.erreurs.get(0).getMotErrone());
 		assertEquals(3, Main.erreurs.get(0).getLigne());
@@ -76,8 +88,9 @@ public class MainTest {
 	// Test de la taxe
 	@Test
 	public void testCalculerTaxes() {
-		double montant =15.59;
-		assertEquals(17,92, Main.calculerTaxes(montant));
+		
+		double montant =15.5;
+		assertEquals(2.33, Main.calculerTaxes(montant), 0.01);
 		
 	}
 	
@@ -86,11 +99,12 @@ public class MainTest {
 	// Calculer la facture
 	@Test
 	public void testCalculerFacture() {
+		Main.erreurs=new ArrayList<ErreurFichier>();
 		ArrayList<String> contenu = new ArrayList<String>(Arrays.asList("Clients :", "Laurie", "Plats :", "Poutine 21.59","Commandes :","Laurie Poutine 5", "Fin"));
 		ArrayList<List<String>> contenuSepare = Main.separerPartiesContenu(contenu);
 		Main.creerObjets(contenuSepare);
 		ArrayList<String> facture = Main.calculerFacture();
-		System.out.println(facture.toString());
+		
 		assertEquals("[Laurie 124,11]", facture.toString());
 		
 	}

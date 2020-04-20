@@ -15,11 +15,11 @@ import partie3.main.ErreurFichier;
 import partie3.main.TypeErreurs;
 
 public class Main {
-	private static final double TAUX_TPS = 0.05;
+	private static final double TAUX_TPS = 0.0500;
 
-	private static final double TAUX_TVQ = 0.0975;
+	private static final double TAUX_TVQ = 0.09975;
 
-	private static final String FICHIER_ENTREE = "valeurs.txt";
+	private static final String FICHIER_ENTREE = "valeurs_erronees.txt";
 
 	public static String fichierSortie = "Facture.txt";
 
@@ -29,6 +29,9 @@ public class Main {
 	public static ArrayList<Client> listeClients;
 	public static ArrayList<Plat> listePlats;
 	public static ArrayList<Commande> listeCommandes;
+	public static int ligneDebutClients;
+	public static int ligneDebutPlats;
+	public static int ligneDebutCommandes;
 	public static ArrayList<ErreurFichier> erreurs= new ArrayList<ErreurFichier>();
 	
 
@@ -53,7 +56,9 @@ public class Main {
 
 	private static void verificationErreur(ArrayList<List<String>> contenuSepare) {
 		// Récupérer la partie du fichier contenant l'erreur (Si il y en a une)
-
+		// Créer les listes des objets
+		AfficherInfos("Création des objets");
+		creerObjets(contenuSepare);
 		detecterErreursCommandes(contenuSepare);
 		 
 		if (erreurs.size()==0) {
@@ -64,12 +69,24 @@ public class Main {
 			gestionErreur();
 		}
 	}
-
-	private static void creationFacture(ArrayList<List<String>> contenuSepare) {
-		// Créer les listes des objets
-		AfficherInfos("Création des objets");
-		creerObjets(contenuSepare);
-
+	public static void detecterErreursCommandes(ArrayList<List<String>> contenuSepare) {
+		for (int i = 0; i < listeCommandes.size(); i++) {
+			
+			boolean estPresent=false;
+			for (Client client : listeClients) {
+				if(client.getNom().equalsIgnoreCase(listeCommandes.get(i).getNomClient()))estPresent=true;
+				
+			}
+			if(!estPresent) {
+				
+				erreurs.add(new ErreurFichier(ligneDebutCommandes+i, TypeErreurs.CLIENT_INEXISTANT, listeCommandes.get(i).nomClient));
+			}
+			
+		}
+		
+		System.out.println();
+	}
+	public static void creationFacture(ArrayList<List<String>> contenuSepare) {
 		// Creer la facture
 		AfficherInfos("Calcul de la facture");
 		ArrayList<String> facture = calculerFacture();
@@ -77,14 +94,6 @@ public class Main {
 		// Afficher la facture
 		AfficherInfos("Affichage de la facture inscrite dans le fichier " + fichierSortie);
 		ecrireEtAfficherFactureFichier(facture);
-	}
-
-	private static void gestionErreur() {
-		//TODO
-		//System.err.println("Le fichier ne respecte pas le format" + " demandé !");
-		for (ErreurFichier erreur : erreurs) {
-			System.out.println("Erreur survenue à la ligne "+erreur.getLigne()+" de type "+ erreur.getType()+ " ("+erreur.getMotErrone()+")");
-		}
 	}
 
 	private static void AfficherInfos(String chaine) {
@@ -111,6 +120,7 @@ public class Main {
 	}
 
 	public static void creerObjets(ArrayList<List<String>> contenuSepare) {
+		
 		listeClients = creerTabClients(contenuSepare.get(0));
 		listePlats = creerTabPlats(contenuSepare.get(1));
 		listeCommandes = creerTabCommandes(contenuSepare.get(2));
@@ -148,7 +158,7 @@ public class Main {
 					Plat plat = listePlats.get(indicePlat);
 					total += plat.getPrixPlat() * commande.getQuantite();
 				} catch (Exception e) {
-					System.err.println("Le plat " + commande.getNomPlat() + " n'existe pas.");
+					erreurs.add(new ErreurFichier(recupererIndicePlat(commande)+ligneDebutCommandes+1, TypeErreurs.PLAT_INEXISTANT, commande.getNomPlat()));
 
 				}
 
@@ -173,8 +183,11 @@ public class Main {
 		ArrayList<List<String>> contenuSepare = new ArrayList<List<String>>();
 		try {
 			contenuSepare.add(contenu.subList(contenu.lastIndexOf("Clients :") + 1, contenu.lastIndexOf("Plats :")));
+			ligneDebutClients= contenu.lastIndexOf("Clients :")+1;
 			contenuSepare.add(contenu.subList(contenu.lastIndexOf("Plats :") + 1, contenu.lastIndexOf("Commandes :")));
+			ligneDebutPlats=contenu.lastIndexOf("Plats :")+1;
 			contenuSepare.add(contenu.subList(contenu.lastIndexOf("Commandes :") + 1, contenu.lastIndexOf("Fin")));
+			ligneDebutCommandes=contenu.lastIndexOf("Commandes :")+1;
 		} catch (Exception e) {
 			erreurs.add(new ErreurFichier(-1, TypeErreurs.FORMAT_INCORRECT, ""));
 		}
@@ -201,7 +214,7 @@ public class Main {
 			try {
 				tabPlats.add(new Plat(chaineSeparee[0], Double.parseDouble(chaineSeparee[1])));
 			} catch (NumberFormatException e) {
-				System.err.println("Impossible de transformer la chaine \"" + chaineSeparee[1] + "\" en double.");
+				erreurs.add(new ErreurFichier(ligneDebutPlats+i, TypeErreurs.PRIX_NON_DOUBLE, chaineSeparee[1]));
 			}
 
 		}
@@ -216,21 +229,22 @@ public class Main {
 			try {
 				tabCommandes.add(new Commande(chaineSeparee[0], chaineSeparee[1], Integer.parseInt(chaineSeparee[2])));
 			} catch (NumberFormatException e) {
-				System.err.println("Impossible de transformer la chaine \"" + chaineSeparee[2] + "\" en entier.");
+				erreurs.add(new ErreurFichier(ligneDebutCommandes+i, TypeErreurs.QUANTITE_PLAT_DECIMAL, chaineSeparee[2]));
+				
+			}catch(IndexOutOfBoundsException e) {
+				erreurs.add(new ErreurFichier(i, TypeErreurs.FORMAT_INCORRECT, ""));
 			}
 
 		}
 		return tabCommandes;
 
 	}
-
-	
-	public static void detecterErreursCommandes(ArrayList<List<String>> contenuSepare) {
-		//TODO
-	}
 	
 	public static double calculerTaxes(double montant) {
-		return montant*TAUX_TPS + montant*TAUX_TVQ;
+		double taxe = Math.round(montant*(TAUX_TPS)*100)/100.00;
+		taxe += Math.round(montant*(TAUX_TVQ)*100)/100.00;
+		
+		return taxe;
 	}
 	/*
 	 * Détermine si le format du fichier est valide.
@@ -247,6 +261,14 @@ public class Main {
 		String[] chaineSeparee = chaine.split(" ");
 		return chaineSeparee.length;
 
+	}
+	
+	private static void gestionErreur() {
+		//TODO
+		//System.err.println("Le fichier ne respecte pas le format" + " demandé !");
+		for (ErreurFichier erreur : erreurs) {
+			System.out.println("Erreur survenue à la ligne "+erreur.getLigne()+" de type "+ erreur.getType()+ " ("+erreur.getMotErrone()+")");
+		}
 	}
 
 }

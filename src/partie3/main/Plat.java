@@ -4,6 +4,7 @@ public class Plat {
 	public String nomPlat = "";
 	public double prixPlat = 0;
 	
+	
 	public Plat(String nomPlat, double d) {
 		this.nomPlat = nomPlat;
 		this.prixPlat = d;

@@ -1,6 +1,6 @@
 Pascal : 																		Statut
 	- Création de tests																En cours
-	- Gestion de commandes incorrectes (nom du client ou plat n'existe pas)										Inactif
+	- Gestion de commandes incorrectes (nom du client ou plat n'existe pas)										En cours (4/8 estimé)
 	- Afficher facture au terminal et fichier													Inactif
 	- Affichage des erreurs dans sorties														Inactif
 	- Masquage des clients ayant facture de 0$													Inactif
