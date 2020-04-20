@@ -18,16 +18,11 @@ public class Plat {
 		return this.nomPlat;
 	}
 	
-	public void setNomPlat( String nom ) {
-		this.nomPlat = nom;
-	}
-	
+
 	public double getPrixPlat() {
 		return this.prixPlat;
 	}
 	
-	public void setPrixPlat( double prix ) {
-		this.prixPlat = prix;
-	}
+
 	
 }

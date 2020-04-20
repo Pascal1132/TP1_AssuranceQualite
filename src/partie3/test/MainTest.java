@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import partie3.main.OutilsFichier;
 import partie3.main.Main;
 import partie3.main.ErreurFichier;
 import partie3.main.TypeErreurs;
@@ -93,6 +94,11 @@ public class MainTest {
 		assertEquals(2.33, Main.calculerTaxes(montant), 0.01);
 		
 	}
+	@Test
+	public void testCompterEspace() {
+		int nbEspace = Main.compterPartiesChaine("l i l j h r           ");
+		assertEquals(6, nbEspace);
+	}
 	
 	// Tests de la sortie
 	
@@ -105,13 +111,20 @@ public class MainTest {
 		Main.creerObjets(contenuSepare);
 		ArrayList<String> facture = Main.calculerFacture();
 		
-		assertEquals("[Laurie 124,11]", facture.toString());
+		assertEquals("[Laurie 124.12$]", facture.toString());
 		
 	}
 	
-	//Test ecrirEtAfficherFacture()
 	@Test
-	public void testEcrireAfficherFacture() {
+	public void testCreationFacture() {
+		ArrayList<String> contenu = new ArrayList<String>(Arrays.asList("Clients :", "Laurie", "Plats :", "Poutine 21.59","Commandes :","Laurie Poutine 5", "Fin"));
+		ArrayList<List<String>> contenuSepare = Main.separerPartiesContenu(contenu);
+		Main.creerObjets(contenuSepare);
+		Main.fichierSortie = "testEcrireAfficherFacture.txt";
+		Main.creationFacture(contenuSepare);
+		ArrayList<String> retour =OutilsFichier.lire(Main.fichierSortie);
+		
+		assertArrayEquals(new Object[] {"Bienvenue chez Barette !","Factures:","Laurie 124.12$"}, retour.toArray());
 		
 	}
 	

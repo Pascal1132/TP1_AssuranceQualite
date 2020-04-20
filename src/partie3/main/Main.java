@@ -81,10 +81,13 @@ public class Main {
 				
 				erreurs.add(new ErreurFichier(ligneDebutCommandes+i, TypeErreurs.CLIENT_INEXISTANT, listeCommandes.get(i).nomClient));
 			}
+			if(listeCommandes.get(i).getQuantite()<0) {
+				erreurs.add(new ErreurFichier(ligneDebutCommandes+i, TypeErreurs.QUANTITE_PLAT_NEGATIVE, String.valueOf(listeCommandes.get(i).getQuantite())));
+			}
 			
 		}
 		
-		System.out.println();
+		
 	}
 	public static void creationFacture(ArrayList<List<String>> contenuSepare) {
 		// Creer la facture
@@ -110,13 +113,6 @@ public class Main {
 		}
 
 		OutilsFichier.ecrire(fichierSortie, factureEnChaine);
-		// Ouvrir le fichier Facture.txt
-		try {
-			Desktop.getDesktop().open(new File(fichierSortie));
-		} catch (IOException e) {
-			
-			System.err.println("Erreur dans l'ouverture du fichier " + fichierSortie);
-		}
 	}
 
 	public static void creerObjets(ArrayList<List<String>> contenuSepare) {
@@ -156,7 +152,9 @@ public class Main {
 				try {
 					int indicePlat = recupererIndicePlat(commande);
 					Plat plat = listePlats.get(indicePlat);
-					total += plat.getPrixPlat() * commande.getQuantite();
+					double sousTotal = plat.getPrixPlat() * commande.getQuantite();
+					
+					total = calculerTaxes(sousTotal)+sousTotal;
 				} catch (Exception e) {
 					erreurs.add(new ErreurFichier(recupererIndicePlat(commande)+ligneDebutCommandes+1, TypeErreurs.PLAT_INEXISTANT, commande.getNomPlat()));
 
@@ -212,7 +210,13 @@ public class Main {
 			String[] chaineSeparee = list.get(i).split(" ");
 
 			try {
-				tabPlats.add(new Plat(chaineSeparee[0], Double.parseDouble(chaineSeparee[1])));
+				double prix=Double.parseDouble(chaineSeparee[1]);
+				if(prix>=0) {
+					tabPlats.add(new Plat(chaineSeparee[0],prix));
+				}else {
+					erreurs.add(new ErreurFichier(ligneDebutPlats+i, TypeErreurs.PRIX_PLAT_NEGATIF, chaineSeparee[1]));
+				}
+				
 			} catch (NumberFormatException e) {
 				erreurs.add(new ErreurFichier(ligneDebutPlats+i, TypeErreurs.PRIX_NON_DOUBLE, chaineSeparee[1]));
 			}
@@ -255,7 +259,7 @@ public class Main {
 	 * 
 	 * 
 	 */
-	public static int compterEspace(String chaine) {
+	public static int compterPartiesChaine(String chaine) {
 
 		chaine = chaine.trim();
 		String[] chaineSeparee = chaine.split(" ");
