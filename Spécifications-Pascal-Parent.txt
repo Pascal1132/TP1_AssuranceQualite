@@ -1,0 +1,19 @@
+Pascal : 
+	- Gestion des erreurs:
+		* Le nom du client n'existe pas
+		* Le plat n'existe pas
+		* Des chiffres sont erronés
+			- Quantité de plat négatif
+			- Prix négatif
+			- Quantité de plat chiffre décimal
+	- Affichage sortie:
+		* Doit être sur le terminal et en fichier texte
+		* Le fichier de sortie doit être de format Facture-du-date-heure.txt
+		* Doit contenir la liste de toute les commandes incorrectes
+		* Ergonomie au choix
+		* Ne pas contenir les clients qui ont un total de 0$
+	- Calcul des taxes:
+		* TPS 5%
+		* TVQ 9,975%
+		
+	

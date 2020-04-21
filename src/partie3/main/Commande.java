@@ -3,34 +3,23 @@ package partie3.main;
 public class Commande {
 	public String nomClient = "";
 	public String nomPlat = "";
-	public int quantite = 0;
-	
-	public Commande(String nomClient, String nomPlat, int quantite) {
+	public double quantite = 0;
+
+	public Commande(String nomClient, String nomPlat, double d) {
 		this.nomClient = nomClient;
 		this.nomPlat = nomPlat;
-		this.quantite = quantite;
+		this.quantite = d;
 	}
+
 	public String getNomClient() {
 		return this.nomClient;
 	}
-	
-	public void setNomClient( String nom ) {
-		this.nomClient = nom;
-	}
-	
+
 	public String getNomPlat() {
 		return this.nomPlat;
 	}
-	
-	public void setNomPlat( String nom ) {
-		this.nomPlat = nom;
-	}
-	
-	public int getQuantite() {
+
+	public double getQuantite() {
 		return this.quantite;
-	}
-	
-	public void setQuantite( int quantite ) {
-		this.quantite = quantite;
 	}
 }
