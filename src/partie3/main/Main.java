@@ -41,15 +41,15 @@ public class Main {
 
 	public static void main(String[] args) {
 		// Test lire fichier style.txt
-		AfficherInfos("Lecture du fichier " + FICHIER_ENTREE + ".");
 		contenu = OutilsFichier.lire(FICHIER_ENTREE);
 
 		if (contenu.size() != 0) {
 			// Séparer les parties du contenu du fichier
-			AfficherInfos("Séparation des parties.");
 			ArrayList<List<String>> contenuSepare = separerPartiesContenu(contenu);
 			verificationErreur(contenuSepare);
 
+		}else {
+			System.out.println("Fichier vide");
 		}
 
 	}
@@ -57,32 +57,36 @@ public class Main {
 	private static void verificationErreur(ArrayList<List<String>> contenuSepare) {
 		// Récupérer la partie du fichier contenant l'erreur (Si il y en a une)
 		// Créer les listes des objets
-		AfficherInfos("Création des objets");
 		creerObjets(contenuSepare);
 		detecterErreursCommandes(contenuSepare);
-		 
-		if (erreurs.size()==0) {
-			// Aucune erreur
-			creationFacture(contenuSepare);
-		} else {
-			
-			gestionErreur();
-		}
+		creationFacture(contenuSepare);
+		
 	}
 	public static void detecterErreursCommandes(ArrayList<List<String>> contenuSepare) {
 		for (int i = 0; i < listeCommandes.size(); i++) {
-			
-			boolean estPresent=false;
+			//recherche dans tab listeClients
+			boolean estClientPresent=false;
+			boolean estPlatPresent=false;
 			for (Client client : listeClients) {
-				if(client.getNom().equalsIgnoreCase(listeCommandes.get(i).getNomClient()))estPresent=true;
+				if(client.getNom().equalsIgnoreCase(listeCommandes.get(i).getNomClient()))estClientPresent=true;
 				
 			}
-			if(!estPresent) {
+			for (Plat plat : listePlats) {
+				if(plat.getNomPlat().equalsIgnoreCase(listeCommandes.get(i).getNomPlat()))estPlatPresent=true;
+			}
+			
+			if(!estClientPresent) {
 				
 				erreurs.add(new ErreurFichier(ligneDebutCommandes+i, TypeErreurs.CLIENT_INEXISTANT, listeCommandes.get(i).nomClient));
 			}
+			if(!estPlatPresent) {
+				erreurs.add(new ErreurFichier(ligneDebutCommandes+i, TypeErreurs.PLAT_INEXISTANT, listeCommandes.get(i).getNomPlat()));
+			}
 			if(listeCommandes.get(i).getQuantite()<0) {
-				erreurs.add(new ErreurFichier(ligneDebutCommandes+i, TypeErreurs.QUANTITE_PLAT_NEGATIVE, String.valueOf(listeCommandes.get(i).getQuantite())));
+				erreurs.add(new ErreurFichier(ligneDebutCommandes+i, TypeErreurs.QUANTITE_PLAT_NEGATIVE, String.valueOf(Math.round(listeCommandes.get(i).getQuantite()))));
+			}
+			if((int)listeCommandes.get(i).getQuantite()!=listeCommandes.get(i).getQuantite()) {
+				erreurs.add(new ErreurFichier(ligneDebutCommandes+i, TypeErreurs.QUANTITE_PLAT_DECIMAL, String.valueOf(listeCommandes.get(i).getQuantite())));
 			}
 			
 		}
@@ -91,18 +95,15 @@ public class Main {
 	}
 	public static void creationFacture(ArrayList<List<String>> contenuSepare) {
 		// Creer la facture
-		AfficherInfos("Calcul de la facture");
 		ArrayList<String> facture = calculerFacture();
 
 		// Afficher la facture
-		AfficherInfos("Affichage de la facture inscrite dans le fichier " + fichierSortie);
+		if(erreurs.size()==0)
 		ecrireEtAfficherFactureFichier(facture);
+		else gestionErreur();
 	}
 
-	private static void AfficherInfos(String chaine) {
-		System.out.println("[" + indiceInfo + "] " + chaine);
-		indiceInfo++;
-	}
+
 
 	private static void ecrireEtAfficherFactureFichier(ArrayList<String> facture) {
 
@@ -157,7 +158,7 @@ public class Main {
 					
 					total = calculerTaxes(sousTotal)+sousTotal;
 				} catch (Exception e) {
-					erreurs.add(new ErreurFichier(recupererIndicePlat(commande)+ligneDebutCommandes+1, TypeErreurs.PLAT_INEXISTANT, commande.getNomPlat()));
+					
 
 				}
 
@@ -220,6 +221,8 @@ public class Main {
 				
 			} catch (NumberFormatException e) {
 				erreurs.add(new ErreurFichier(ligneDebutPlats+i, TypeErreurs.PRIX_NON_DOUBLE, chaineSeparee[1]));
+			}catch(Exception e) {
+				erreurs.add(new ErreurFichier(ligneDebutPlats+i, TypeErreurs.FORMAT_INCORRECT, ""));
 			}
 
 		}
@@ -232,10 +235,7 @@ public class Main {
 		for (int i = 0; i < list.size(); i++) {
 			String[] chaineSeparee = list.get(i).split(" ");
 			try {
-				tabCommandes.add(new Commande(chaineSeparee[0], chaineSeparee[1], Integer.parseInt(chaineSeparee[2])));
-			} catch (NumberFormatException e) {
-				erreurs.add(new ErreurFichier(ligneDebutCommandes+i, TypeErreurs.QUANTITE_PLAT_DECIMAL, chaineSeparee[2]));
-				
+				tabCommandes.add(new Commande(chaineSeparee[0], chaineSeparee[1], Double.parseDouble(chaineSeparee[2])));
 			}catch(IndexOutOfBoundsException e) {
 				erreurs.add(new ErreurFichier(i, TypeErreurs.FORMAT_INCORRECT, ""));
 			}
@@ -269,11 +269,36 @@ public class Main {
 	}
 	
 	private static void gestionErreur() {
-		//TODO
+		String erreursEnString = "";
 		//System.err.println("Le fichier ne respecte pas le format" + " demandé !");
 		for (ErreurFichier erreur : erreurs) {
-			System.out.println("Erreur survenue à la ligne "+erreur.getLigne()+" de type "+ erreur.getType()+ " ("+erreur.getMotErrone()+")");
+			switch (erreur.getType()) {
+			case FORMAT_INCORRECT:
+				erreursEnString+="Le format du fichier n'est pas valide survenu à la ligne "+(erreur.getLigne()+1)+"\n";
+				break;
+			case CLIENT_INEXISTANT:
+				erreursEnString+="Le client '"+erreur.getMotErrone()+"' n'est pas valide à la ligne numéro "+(erreur.getLigne()+1)+"\n";
+				break;
+			case PLAT_INEXISTANT:
+				erreursEnString+="Le plat '"+erreur.getMotErrone()+"' n'est pas valide à la ligne numéro "+(erreur.getLigne()+1)+"\n";
+				break;
+			case QUANTITE_PLAT_NEGATIVE:
+				erreursEnString+="La quantité du plat '"+erreur.getMotErrone()+"' ne doit pas être négative à la ligne numéro "+(erreur.getLigne()+1)+"\n";
+				break;
+			case QUANTITE_PLAT_DECIMAL:
+				erreursEnString+="La quantité du plat '"+erreur.getMotErrone()+"' ne doit pas être décimale à la ligne numéro "+(erreur.getLigne()+1)+"\n";
+				break;
+			case PRIX_PLAT_NEGATIF:
+				erreursEnString+="Le prix du plat '"+erreur.getMotErrone()+"' ne doit pas être négative à la ligne numéro "+(erreur.getLigne()+1)+"\n";
+				break;
+			case PRIX_NON_DOUBLE:
+				erreursEnString+="Le prix du plat '"+erreur.getMotErrone()+"' doit être de type double à la ligne numéro "+(erreur.getLigne()+1)+"\n";
+				break;
+			}
+			
 		}
+		System.out.println("Erreurs:\n"+erreursEnString);
+		OutilsFichier.ecrire(fichierSortie, "Erreurs:\n"+erreursEnString);
 	}
 
 }

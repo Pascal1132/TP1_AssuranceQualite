@@ -2,7 +2,7 @@ Pascal : 																		Statut
 	- Création de tests																En attente(84,0% de couverture)
 	- Gestion de commandes incorrectes (nom du client ou plat n'existe pas)										Terminé
 	- Afficher facture au terminal et fichier													Terminé
-	- Affichage des erreurs dans sorties														En cours
+	- Affichage des erreurs dans sorties														Terminé
 	- Masquage des clients ayant facture de 0$													Inactif
-	- Ajout du calcul des taxes															Inactif
+	- Ajout du calcul des taxes															Terminé
 	

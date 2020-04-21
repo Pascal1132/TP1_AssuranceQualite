@@ -40,7 +40,7 @@ public class MainTest {
 		ArrayList<List<String>> contenuSepare = Main.separerPartiesContenu(contenu);
 		Main.creerObjets(contenuSepare);
 		Main.detecterErreursCommandes(contenuSepare);
-		Main.creationFacture(contenuSepare);
+		
 		
 		
 		assertEquals("HotDog", Main.erreurs.get(0).getMotErrone());
@@ -117,6 +117,7 @@ public class MainTest {
 	
 	@Test
 	public void testCreationFacture() {
+		Main.erreurs=new ArrayList<ErreurFichier>();
 		ArrayList<String> contenu = new ArrayList<String>(Arrays.asList("Clients :", "Laurie", "Plats :", "Poutine 21.59","Commandes :","Laurie Poutine 5", "Fin"));
 		ArrayList<List<String>> contenuSepare = Main.separerPartiesContenu(contenu);
 		Main.creerObjets(contenuSepare);

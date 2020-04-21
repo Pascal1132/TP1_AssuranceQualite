@@ -1,3 +1,2 @@
-Bienvenue chez Barette !
-Factures:
-Roger 12.08$
+Erreurs:
+Le plat 'HotDog' n'est pas valide à la ligne numéro 6

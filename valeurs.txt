@@ -1,7 +1,12 @@
 Clients :
 Roger
 Plats :
-Poutine 10.5
+Poutine 5
 Commandes :
+Leon Frites -1.5
 Roger Poutine 1
+Roger Poutine 1
+Roger Poutine 1
+Roger Poutine 1
+Roger Firt 1
 Fin
