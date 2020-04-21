@@ -9,38 +9,45 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class OutilsFichier {
+	private OutilsFichier() {
+		throw new IllegalStateException("Utility class");
+	}
+
 	public static ArrayList<String> lire(String fichier) {
-		ArrayList<String> contenu = new ArrayList<String>();
-		
+		final ArrayList<String> contenu = new ArrayList<>();
+
 		try {
-		      File myObj = new File(fichier);
-		      
-		      Scanner myReader = new Scanner(myObj, "UTF-8");
-		      while (myReader.hasNextLine()) {
-		    	  
-		        String data = myReader.nextLine();
-		        contenu.add(data);
-		      }
-		      myReader.close();
-		    } catch (FileNotFoundException e) {
-		      System.err.println("Erreur de lecture du fichier. Impossible de trouver le fichier nommé \""+ fichier +"\"");
-		      
-		    }
+			final File myObj = new File(fichier);
+
+			final Scanner myReader = new Scanner(myObj, "UTF-8");
+			while (myReader.hasNextLine()) {
+
+				final String data = myReader.nextLine();
+				contenu.add(data);
+			}
+			myReader.close();
+		} catch (FileNotFoundException e) {
+			System.err.println(new StringBuilder()
+					.append("Erreur de lecture du fichier. Impossible de trouver le fichier nommé \"").append(fichier)
+					.append("\"").toString());
+
+		}
 		return contenu;
 	}
+
 	public static void ecrire(String fichier, String contenu) {
-		
-	    BufferedWriter writer;
-		
-	    try {
-	    	writer = new BufferedWriter(new FileWriter(fichier));
+
+		final BufferedWriter writer;
+
+		try {
+			writer = new BufferedWriter(new FileWriter(fichier));
 			writer.write(contenu);
 			writer.close();
 		} catch (IOException e) {
-			System.err.println("Erreur d'écriture du fichier ("+fichier+")");
+			System.err.println(new StringBuilder().append("Erreur d'écriture du fichier (").append(fichier).append(")")
+					.toString());
 		}
-	     
-	    
+
 	}
-	
+
 }

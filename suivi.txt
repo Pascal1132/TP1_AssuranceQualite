@@ -1,7 +1,8 @@
 Pascal : 																		Statut
-	- Gestion de commandes incorrectes (nom du client ou plat n'existe pas)		Inactif
-	- Afficher facture au terminal et fichier Facture-du-"date-heure".txt		Inactif
-	- Affichage des erreurs dans sorties										Inactif
-	- Masquage des clients ayant facture de 0$									Inactif
-	- Ajout du calcul des taxes													Inactif
+	- Gestion de commandes incorrectes (nom du client ou plat n'existe pas)										Inactif
+	- Afficher facture au terminal et fichier Facture-du-"date-heure".txt										Inactif
+	- Affichage des erreurs dans sorties														Inactif
+	- Masquage des clients ayant facture de 0$													Inactif
+	- Ajout du calcul des taxes															Inactif
+	- Réusinage																	En cours
 	

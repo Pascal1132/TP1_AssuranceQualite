@@ -7,7 +7,7 @@ public class Client {
 		this.nom = nom;
 
 	}
-
+	
 	public String getNom() {
 		return this.nom;
 	}
