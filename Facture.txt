@@ -1,7 +1,0 @@
-Bienvenue chez Barette !
-Factures:
-Roger 5.75$
-Celine 4.60$
-Gérard 14.89$
-Pierre 3.45$
-Léonie 8.63$

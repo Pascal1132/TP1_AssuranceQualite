@@ -12,7 +12,7 @@ public class Main {
 
 	private static final String FICHIER_ENTREE = "valeurs.txt";
 
-	public static String fichierSortie = "Facture.txt";
+	public static String fichierSortie = "Facturet.txt";
 
 	public static final String TITRE_FACTURE = "Bienvenue chez Barette !\nFactures:";
 
@@ -27,6 +27,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		// Test lire fichier style.txt
+		genererFichierSortie();
 		contenu = OutilsFichier.lire(FICHIER_ENTREE);
 
 		if (contenu.size() != 0) {
@@ -38,6 +39,12 @@ public class Main {
 			System.out.println("Fichier vide");
 		}
 
+	}
+
+	private static void genererFichierSortie() {
+		// TODO Auto-generated method stub
+		Main.fichierSortie = "Facture-du-"+java.time.LocalDate.now()+"_"+java.time.LocalTime.now().getHour()+"h"+java.time.LocalTime.now().getMinute()+".txt";
+		
 	}
 
 	private static void verificationErreur(ArrayList<List<String>> contenuSepare) {

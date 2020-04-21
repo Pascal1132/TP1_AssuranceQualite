@@ -1,4 +1,0 @@
-Erreurs:
-Le format du fichier n'est pas valide. Erreur survenue à la ligne 1
-Le client 'a' n'est pas valide à la ligne numéro 2
-La quantité du plat 'b' ne doit pas être négative à la ligne numéro 3
