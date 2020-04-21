@@ -1,2 +1,7 @@
-Erreurs:
-Le plat 'HotDog' n'est pas valide à la ligne numéro 6
+Bienvenue chez Barette !
+Factures:
+Roger 5.75$
+Celine 4.60$
+Gérard 14.89$
+Pierre 3.45$
+Léonie 8.63$

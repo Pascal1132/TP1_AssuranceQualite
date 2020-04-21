@@ -2,6 +2,8 @@ package partie3.test;
 
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,6 +67,20 @@ public class MainTest {
 		assertEquals(3, Main.erreurs.get(0).getLigne());
 		assertEquals(TypeErreurs.PRIX_PLAT_NEGATIF, Main.erreurs.get(0).getType());
 	}
+	
+	//Test de l'affichage des erreurs
+	@Test
+	public void testGestionErreur() {
+		Main.erreurs = new ArrayList<ErreurFichier>();
+		Main.erreurs.add(new ErreurFichier(0, TypeErreurs.FORMAT_INCORRECT, ""));
+		Main.erreurs.add(new ErreurFichier(1, TypeErreurs.CLIENT_INEXISTANT, "a"));
+		Main.erreurs.add(new ErreurFichier(2, TypeErreurs.QUANTITE_PLAT_NEGATIVE, "b"));
+		String retour = Main.gestionErreur();
+		assertEquals("Erreurs:\n" + 
+				"Le format du fichier n'est pas valide. Erreur survenue à la ligne 1\n" + 
+				"Le client 'a' n'est pas valide à la ligne numéro 2\n" + 
+				"La quantité du plat 'b' ne doit pas être négative à la ligne numéro 3\n", retour);
+	}
 
 	// Test de la taxe
 	@Test
@@ -82,7 +98,17 @@ public class MainTest {
 		assertEquals(6, nbEspace);
 	}
 
-	// Tests de la sortie
+	// Test avec client qui n'a pas de commande
+	@Test
+	public void testClientTotalZero() {
+		ArrayList<List<String>> contenuSepare = mainPourTests(new ArrayList<String>(Arrays.asList("Clients :", "Laurie",
+				"Plats :", "Poutine 21.59", "Commandes :", "Fin")));
+		Main.fichierSortie = "testClientTotalZero.txt";
+		Main.creationFacture(contenuSepare);
+		ArrayList<String> retour = OutilsFichier.lire(Main.fichierSortie);
+		
+		assertArrayEquals(new Object[] { "Bienvenue chez Barette !", "Factures:"}, retour.toArray());
+	}
 
 	// Calculer la facture
 	@Test
@@ -95,10 +121,10 @@ public class MainTest {
 	}
 
 	@Test
-	public void testCreationFacture() {
+	public void testCreationFacture() throws FileNotFoundException, IOException {
 		ArrayList<List<String>> contenuSepare = mainPourTests(new ArrayList<String>(Arrays.asList("Clients :", "Laurie",
 				"Plats :", "Poutine 21.59", "Commandes :", "Laurie Poutine 5", "Fin")));
-		Main.fichierSortie = "testEcrireAfficherFacture.txt";
+		Main.fichierSortie = "testCreationFacture.txt";
 		Main.creationFacture(contenuSepare);
 		ArrayList<String> retour = OutilsFichier.lire(Main.fichierSortie);
 		assertArrayEquals(new Object[] { "Bienvenue chez Barette !", "Factures:", "Laurie 124.12$" }, retour.toArray());

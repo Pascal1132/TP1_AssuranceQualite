@@ -35,8 +35,6 @@ public class Main {
 	public static ArrayList<ErreurFichier> erreurs= new ArrayList<ErreurFichier>();
 	
 
-	private static int indiceInfo = 0;
-
 	
 
 	public static void main(String[] args) {
@@ -66,17 +64,16 @@ public class Main {
 		for (int i = 0; i < listeCommandes.size(); i++) {
 			//recherche dans tab listeClients
 			boolean estClientPresent=false;
-			boolean estPlatPresent=false;
 			for (Client client : listeClients) {
 				if(client.getNom().equalsIgnoreCase(listeCommandes.get(i).getNomClient()))estClientPresent=true;
 				
 			}
+			boolean estPlatPresent=false;
 			for (Plat plat : listePlats) {
 				if(plat.getNomPlat().equalsIgnoreCase(listeCommandes.get(i).getNomPlat()))estPlatPresent=true;
 			}
 			
 			if(!estClientPresent) {
-				
 				erreurs.add(new ErreurFichier(ligneDebutCommandes+i, TypeErreurs.CLIENT_INEXISTANT, listeCommandes.get(i).nomClient));
 			}
 			if(!estPlatPresent) {
@@ -98,8 +95,10 @@ public class Main {
 		ArrayList<String> facture = calculerFacture();
 
 		// Afficher la facture
-		if(erreurs.size()==0)
-		ecrireEtAfficherFactureFichier(facture);
+		if(erreurs.size()==0) {
+			ecrireEtAfficherFactureFichier(facture);
+		}
+		
 		else gestionErreur();
 	}
 
@@ -128,6 +127,8 @@ public class Main {
 		ArrayList<String> facture = new ArrayList<String>();
 		for (Client client : listeClients) {
 			double totalClient = calculerTotal(client);
+			// Si le client n'a pas un total de zéro
+			if(totalClient !=0)
 			facture.add(client.getNom() + " " + formaterTotal(totalClient));
 		}
 
@@ -268,13 +269,12 @@ public class Main {
 
 	}
 	
-	private static void gestionErreur() {
+	public static String gestionErreur() {
 		String erreursEnString = "";
-		//System.err.println("Le fichier ne respecte pas le format" + " demandé !");
 		for (ErreurFichier erreur : erreurs) {
 			switch (erreur.getType()) {
 			case FORMAT_INCORRECT:
-				erreursEnString+="Le format du fichier n'est pas valide survenu à la ligne "+(erreur.getLigne()+1)+"\n";
+				erreursEnString+="Le format du fichier n'est pas valide. Erreur survenue à la ligne "+(erreur.getLigne()+1)+"\n";
 				break;
 			case CLIENT_INEXISTANT:
 				erreursEnString+="Le client '"+erreur.getMotErrone()+"' n'est pas valide à la ligne numéro "+(erreur.getLigne()+1)+"\n";
@@ -299,6 +299,7 @@ public class Main {
 		}
 		System.out.println("Erreurs:\n"+erreursEnString);
 		OutilsFichier.ecrire(fichierSortie, "Erreurs:\n"+erreursEnString);
+		return "Erreurs:\n"+erreursEnString;
 	}
 
 }
