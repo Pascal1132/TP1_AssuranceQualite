@@ -1,19 +1,11 @@
 Clients :
 Roger
 Celine
-Gérard
 Pierre
-Léonie
 Plats :
 Poutine 5
 Frites 2
-Steak 1.5
-Fleurs 2.59
+Steak1.5
 Commandes :
-Roger Poutine 1
-Celine Frites 2
-Pierre Steak 2
-Gérard Steak 2
-Gérard Fleurs 5
-Léonie Steak 5
+RogerPoutine 1
 Fin

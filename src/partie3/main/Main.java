@@ -50,9 +50,14 @@ public class Main {
 	private static void verificationErreur(ArrayList<List<String>> contenuSepare) {
 		// Récupérer la partie du fichier contenant l'erreur (Si il y en a une)
 		// Créer les listes des objets
-		creerObjets(contenuSepare);
-		detecterErreursCommandes(contenuSepare);
-		creationFacture(contenuSepare);
+		try {
+			creerObjets(contenuSepare);
+			detecterErreursCommandes(contenuSepare);
+			creationFacture(contenuSepare);
+		}catch(Exception e) {
+			System.out.println("Une erreur est survenue dans le fichier.");
+		}
+		
 
 	}
 
@@ -249,7 +254,7 @@ public class Main {
 				tabCommandes
 						.add(new Commande(chaineSeparee[0], chaineSeparee[1], Double.parseDouble(chaineSeparee[2])));
 			} catch (IndexOutOfBoundsException e) {
-				erreurs.add(new ErreurFichier(i, TypeErreurs.FORMAT_INCORRECT, ""));
+				erreurs.add(new ErreurFichier(ligneDebutCommandes+i, TypeErreurs.FORMAT_INCORRECT, ""));
 			}
 
 		}
