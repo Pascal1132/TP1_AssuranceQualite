@@ -1,13 +1,19 @@
 Clients :
 Roger
-Céline
-Steeve
+Celine
+Gérard
+Pierre
+Léonie
 Plats :
-Poutine 10.5
-Frites 2.5
-Repas_Poulet 15.75
+Poutine 5
+Frites 2
+Steak 1.5
+Fleurs 2.59
 Commandes :
 Roger Poutine 1
-Céline Frites 2
-Céline Repas_Poulet 1
+Celine Frites 2
+Pierre Steak 2
+Gérard Steak 2
+Gérard Fleurs 5
+Léonie Steak 5
 Fin
